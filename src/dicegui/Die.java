@@ -1,4 +1,4 @@
-package dice;
+package dicegui;
 import java.util.Random;
 
 /**  	
@@ -100,14 +100,19 @@ public class Die
 		extends Die{
 		
 		/*Instance Variables for LoadedDie*/
-		int LoadedSide; //decides which side of die will have weighted probability of being the die's value 
-		double LoadPercentage; //decides the probability that LoadedSide will be the die's value
+		public int LoadedSide; //decides which side of die will have weighted probability of being the die's value 
+		public double LoadPercentage; //decides the probability that LoadedSide will be the die's value
 		
 		/**LoadedDie default constructor
 		 */
 		public LoadedDie(){
 			this(6, 6, (100/6)); //A Default Loaded Die will be fair
 		}
+                
+                public LoadedDie(int n){
+                    this(n, 6, (100/6));
+                }
+                
 		
 		/**LoadedDie Non-default constructor
 		 * @param n _LoadedSide _LoadPercentage
@@ -127,6 +132,9 @@ public class Die
 			}
 		}
 		
+                public void setTop(int x){
+                    this.value = x;
+                }
 		
 		/**hashcode()
 		 * @return integer
