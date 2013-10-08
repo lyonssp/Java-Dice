@@ -30,11 +30,14 @@ import javafx.stage.Stage;
  * @author sean
  */
 public class DiceGUI extends Application {
-
+    
 
 @Override    
-public void start(Stage primaryStage) {
-
+public void start(final Stage primaryStage) {
+final GameElements game = new GameElements();
+game.start = false;
+game.point = 0;
+    
 //Read in user input about the game die
 Scanner scanner = new Scanner(System.in);
 System.out.println("How many sides would you like the die to have?");
@@ -42,7 +45,7 @@ final int sides = scanner.nextInt();
 System.out.println("Would you like the die to be loaded (Enter 1) or fair (Enter 2)?");
 int loaded_fair = scanner.nextInt();
 
-final Die temp = new Die(); //need Die Object to create instance of LoadedDie
+Die temp = new Die(); //need Die Object to create instance of LoadedDie
 final LoadedDie GameDie = temp.new LoadedDie(sides); //LoadedDie is fair by default
 
 if(loaded_fair == 1){
@@ -53,11 +56,6 @@ if(loaded_fair == 1){
     GameDie.LoadPercentage = load_percent;
     GameDie.LoadedSide = load_side;
 }
-
-
-
-//Create Label to show Point Value in GUI
-int Init_Point = 0;
 
 //congifure grid
 primaryStage.setTitle("A Simple Game of Dice");
@@ -81,8 +79,27 @@ btn.setOnAction(new EventHandler(){
             @Override
             public void handle(Event event) {
                 
-                int newvalue = GameDie.roll();
-                GameDie.value = newvalue;
+                GameDie.value = GameDie.roll();
+                if(GameDie.value == 1){
+                    System.out.println("You Rolled a one.  You lose.  Good Day.");
+                    primaryStage.close();
+                }
+                /*will never resolve to true on the first roll 
+                because point initialized to zero*/
+                if(GameDie.value == game.point){
+                    System.out.println("You Rolled the Point Value!  You won!");
+                    primaryStage.close();
+                }
+                
+                
+                //Check if game has started and set Point value
+                if(game.start == false){
+                    game.point = GameDie.value;
+                    game.start = true;
+                    Label PointValue = new Label("Game's Point Value: " + game.point);
+                    grid.add(PointValue, 10, 0, 2, 2);
+                }
+                
                 
                 //Create Text to label the game die in GUI
                 String Str_DieValue = Integer.toString(GameDie.value);
